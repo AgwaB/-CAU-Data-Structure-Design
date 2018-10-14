@@ -28,7 +28,8 @@ public class KruskalAlgorithm2 {
     Edge[] getEdges(){
         return edge;
     }
-    class Vertex
+
+    static class Vertex
     {
         int num;
         String name;
@@ -132,9 +133,11 @@ public class KruskalAlgorithm2 {
         double avgDist = 0.0;
         double sumDist = 0.0;
         double avgPop = 0.0;
+        double sumPop = 0.0;
+
         for( int i = 0 ; i < edges.size() ; i++){
             sumDist += edges.get(i).dist;
-            avgPop += edges.get(i).pop;
+            sumPop += edges.get(i).pop;
         }
 
         for( int i = 0 ; i < edges.size() ; i++){
@@ -142,21 +145,27 @@ public class KruskalAlgorithm2 {
         }
 
         for( int i = 0 ; i < edges.size() ; i++){
-            edges.get(i).pop = edges.get(i).pop / avgPop ; // 비율로 저장
+            edges.get(i).pop = edges.get(i).pop / sumPop ; // 비율로 저장
         }
 
         avgDist = sumDist / edges.size(); // 평균
-        avgDist /= sumDist; // 비율로 저장
+        avgDist /= sumDist;
+        //avgDist /= sumDist; // 비율로 저장
+        avgPop = sumPop / edges.size(); // 평균
+        //avgPop /= sumPop ; // 비율로 저장
 
         for( int i = 0 ; i < edges.size() ; i++){
-            if(avgDist > edges.get(i).dist){
+            if(avgDist > edges.get(i).dist ){
                 edges.get(i).weight = edges.get(i).dist + edges.get(i).pop;
             } else {
-                edges.get(i).weight = 0;
+                edges.remove(i);
+                i--;
+                //edges.get(i).weight = 0;
             }
-
-            edges.get(i).weight = edges.get(i).dist + edges.get(i).pop;
         }
+
+
+
         V = numberOfVertices;
         E = edges.size();
         edge = new Edge[E];

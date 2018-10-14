@@ -52,7 +52,7 @@ public class KruskalAlgorithm {
         double avgPop = 0.0;
         for( int i = 0 ; i < edges.size() ; i++){
             sumDist += edges.get(i).dist;
-            avgPop = edges.get(i).pop;
+            avgPop += edges.get(i).pop;
         }
 
         for( int i = 0 ; i < edges.size() ; i++){
@@ -67,85 +67,79 @@ public class KruskalAlgorithm {
         avgDist /= sumDist; // 비율로 저장
 
         for( int i = 0 ; i < edges.size() ; i++){
-            if(avgDist > edges.get(i).dist){
-                edges.get(i).weight = edges.get(i).dist + edges.get(i).pop;
-            } else {
-                edges.get(i).weight = 0;
-            }
+//            if(avgDist > edges.get(i).dist){
+//                edges.get(i).weight = edges.get(i).dist + edges.get(i).pop;
+//            } else {
+//                edges.get(i).weight = 0;
+//            }
+
+            edges.get(i).weight = edges.get(i).dist;
         }
 
-
-        Collections.sort(edges, new EdgeComparator());
-        CheckCycle checkCycle = new CheckCycle();
-        for (Edge edge : edges)
-        {
-            spanning_tree[edge.sourcevertex.num][edge.destinationvertex.num] = edge.weight;
-            spanning_tree[edge.destinationvertex.num][edge.sourcevertex.num] = edge.weight;
-            if (checkCycle.checkCycle(spanning_tree, edge.sourcevertex.num))
-            {
-                spanning_tree[edge.sourcevertex.num][edge.destinationvertex.num] = 0;
-                spanning_tree[edge.destinationvertex.num][edge.sourcevertex.num] = 0;
-                edge.weight = -1;
-                continue;
-            }
-            visited[edge.sourcevertex.num] = 1;
-            visited[edge.destinationvertex.num] = 1;
-            for (int i = 0; i < visited.length; i++)
-            {
-                if (visited[i] == 0)
-                {
-                    finished = false;
-                    break;
-                } else
-                {
-                    finished = true;
+            Collections.sort(edges, new EdgeComparator());
+            CheckCycle checkCycle = new CheckCycle();
+            for (Edge edge : edges) {
+                spanning_tree[edge.sourcevertex.num][edge.destinationvertex.num] = edge.weight;
+                spanning_tree[edge.destinationvertex.num][edge.sourcevertex.num] = edge.weight;
+                if (checkCycle.checkCycle(spanning_tree, edge.sourcevertex.num)) {
+                    spanning_tree[edge.sourcevertex.num][edge.destinationvertex.num] = 0;
+                    spanning_tree[edge.destinationvertex.num][edge.sourcevertex.num] = 0;
+                    edge.weight = -1;
+                    continue;
                 }
-            }
-            if (finished)
-                break;
-        }
-        System.out.println("The spanning tree is ");
-        for (int i = 1; i <= numberOfVertices; i++)
-            System.out.print("\t" + i);
-        System.out.println();
-        for (int source = 1; source <= numberOfVertices; source++)
-        {
-            System.out.print(source + "\t");
-            for (int destination = 1; destination <= numberOfVertices; destination++)
-            {
-                System.out.print(spanning_tree[source][destination] + "\t");
-            }
-            System.out.println();
-        }
-
-        for(int i = 0 ; i < edges.size() ; i++)
-            if(edges.get(i).weight == 0) {
-                edges.remove(i);
-                i--;
-            }
-
-        for(int i = 0 ; i < edges.size() ; i++)
-            System.out.println(edges.get(i).weight);
-
-        for(int k = 0 ; k < edges.size() ; k++) {
-            for (int i = 1; i <= numberOfVertices; i++) {
-                for (int j = 1; j <= numberOfVertices; j++) {
-                    if(edges.get(k).sourcevertex.num == i && edges.get(k).destinationvertex.num == j && spanning_tree[i][j] == 0){
-                        edges.get(k).weight = 0;
+                visited[edge.sourcevertex.num] = 1;
+                visited[edge.destinationvertex.num] = 1;
+                for (int i = 0; i < visited.length; i++) {
+                    if (visited[i] == 0) {
+                        finished = false;
                         break;
                     } else {
-                        continue;
+                        finished = true;
                     }
                 }
+                if (finished)
+                    break;
             }
-        }
+            System.out.println("The spanning tree is ");
+            for (int i = 1; i <= numberOfVertices; i++)
+                System.out.print("\t" + i);
+            System.out.println();
+            for (int source = 1; source <= numberOfVertices; source++) {
+                System.out.print(source + "\t");
+                for (int destination = 1; destination <= numberOfVertices; destination++) {
+                    System.out.print(spanning_tree[source][destination] + "\t");
+                }
+                System.out.println();
+            }
 
-        for(int i = 0 ; i < edges.size() ; i++)
-            if(edges.get(i).weight == 0)
-                edges.remove(i);
+            for (int i = 0; i < edges.size(); i++)
+                if (edges.get(i).weight == 0 || edges.get(i).weight == -1) {
+                    edges.remove(i);
+                    i--;
+                }
 
-        for(int i = 0 ; i < edges.size() ; i++)
-            System.out.println(edges.get(i).weight);
+            for (int i = 0; i < edges.size(); i++)
+                System.out.println(edges.get(i).weight);
+//
+//            for (int k = 0; k < edges.size(); k++) {
+//                for (int i = 1; i <= numberOfVertices; i++) {
+//                    for (int j = 1; j <= numberOfVertices; j++) {
+//                        if (edges.get(k).sourcevertex.num == i && edges.get(k).destinationvertex.num == j && spanning_tree[i][j] == 0) {
+//                            edges.get(k).weight = 0;
+//                            break;
+//                        } else {
+//                            continue;
+//                        }
+//                    }
+//                }
+//            }
+//
+//            for (int i = 0; i < edges.size(); i++)
+//                if (edges.get(i).weight == 0)
+//                    edges.remove(i);
+//
+//            for (int i = 0; i < edges.size(); i++)
+//                System.out.println(edges.get(i).weight);
 
         return edges;
     }
@@ -258,7 +252,7 @@ public class KruskalAlgorithm {
                 i = element;
                 while (i <= number_of_nodes)
                 {
-                    if (adjacencyMatrix[element][i] >= 1 && visited[i] == 1)
+                    if (adjacencyMatrix[element][i] > 0 && visited[i] == 1)
                     {
                         if (stack.contains(i))
                         {
@@ -266,7 +260,7 @@ public class KruskalAlgorithm {
                             return cyclepresent;
                         }
                     }
-                    if (adjacencyMatrix[element][i] >= 1 && visited[i] == 0)
+                    if (adjacencyMatrix[element][i] > 0 && visited[i] == 0)
                     {
                         stack.push(i);
                         visited[i] = 1;
